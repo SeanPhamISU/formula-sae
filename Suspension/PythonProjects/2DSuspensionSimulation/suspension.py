@@ -1,7 +1,7 @@
 from pygeosolve import Problem
 from constants import *
 from utils import * 
-from simpy import Point, Line
+# from simpy import Point, Line
 
 problem = Problem()
 

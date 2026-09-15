@@ -1,4 +1,4 @@
-from pygeosolve import Problem
+from pygeosolve2 import Problem
 import math
 from constants import *
 from suspension import *

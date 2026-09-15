@@ -1,0 +1,36 @@
+import math
+from utils import *
+import numpy as np
+
+CHART_ITERATIONS = 64
+
+TIRE_D = 16
+TIRE_RIM_D = 10
+TIRE_W = 7.5
+
+CHASSIS_ROLL_POINT = (0, 1.9)
+CHASSIS_ROLL_ANGLES = np.linspace(-1.5, 1.5, CHART_ITERATIONS)
+
+U = (11.189, 7.315)
+UO = (19.75,10.287)
+L = (11.354, 2.9235)
+LO = (21.432, 3.448)
+TC = (23.228, 6.705)
+TCU = (TC[0], TC[1] + TIRE_D/2)
+TCL = (TC[0], 0)
+TIRE_COMPRESSION = math.fabs(TIRE_D/2 - TC[1])
+
+U_UO = get_dist(U, UO)
+L_LO = get_dist(L, LO)
+print(U_UO)
+print(L_LO)
+
+UO_TC = get_dist(UO, TC)
+LO_TC = get_dist(LO, TC)
+UO_LO = get_dist(UO, LO)
+U_LO = get_dist(U, LO)
+L_UO = get_dist(L, UO)
+UO_TCU = get_dist(UO, TCU)
+LO_TCL = get_dist(LO, TCL)
+TC_TCU = get_dist(TC, TCU)
+TC_TCL = get_dist(TC, TCL)

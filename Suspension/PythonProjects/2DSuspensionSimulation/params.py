@@ -21,9 +21,6 @@ TIRE_COMPRESSION = math.fabs(TIRE_D/2 - TC[1])
 
 U_UO = get_dist(U, UO)
 L_LO = get_dist(L, LO)
-print(U_UO)
-print(L_LO)
-
 UO_TC = get_dist(UO, TC)
 LO_TC = get_dist(LO, TC)
 UO_LO = get_dist(UO, LO)

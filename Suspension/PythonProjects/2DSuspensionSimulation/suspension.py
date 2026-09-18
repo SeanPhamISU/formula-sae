@@ -22,15 +22,18 @@ class Suspension:
         self.mul = 1
         if(not isRight): 
             self.mul = -1
+    def rebuild_geometry(self):
+        self.problem = Problem()
+        self.constraints = []
+        self.build_geometry()
 
     def build_geometry(self):
-        start = time.time()
         self.problem.add_point("U", params.U[0] * self.mul, params.U[1])
         self.problem.add_point("L", params.L[0] * self.mul, params.L[1])
         self.problem.add_point("UO", params.UO[0] * self.mul, params.UO[1])
         self.problem.add_point("LO", params.LO[0] * self.mul, params.LO[1])
         self.problem.add_point("TC", params.TC[0] * self.mul, params.TC[1])
-        self.problem.add_point("TCU", params.TCU[0] * self.mul, params.TCU[1])
+        # self.problem.add_point("TCU", params.TCU[0] * self.mul, params.TCU[1])
         self.problem.add_point("TCL", params.TCL[0] * self.mul, params.TCL[1])
         self.problem.add_point("O", 0, 0)
         self.problem.add_line("Ox", (0, 0), (20 * self.mul, 0))
@@ -54,17 +57,17 @@ class Suspension:
         self.LO_TC_constraint = self.problem.constrain_line_length("LO_TC", params.LO_TC)
         # self.problem.constrain_angle_between_lines("UO_TC", "LO_TC", self.problem["UO_TC"].angle_to(self.problem["LO_TC"]))
 
-        self.problem.add_line("tire", self.problem["TCL"], self.problem["TCU"])
-        self.problem.add_line("UO_TCU", self.problem["UO"], self.problem["TCU"])
+        self.problem.add_line("tire", self.problem["TCL"], self.problem["TC"])
+        # self.problem.add_line("UO_TCU", self.problem["UO"], self.problem["TCU"])
         self.problem.add_line("LO_TCL", self.problem["LO"], self.problem["TCL"])
-        self.problem.add_line("TC_TCU", self.problem["TC"], self.problem["TCU"])
+        # self.problem.add_line("TC_TCU", self.problem["TC"], self.problem["TCU"])
         # self.problem.add_line("TC_TCL", self.problem["TC"], self.problem["TCL"])
-        self.UO_TCU_constraint = self.problem.constrain_line_length("UO_TCU", params.UO_TCU)
+        # self.UO_TCU_constraint = self.problem.constrain_line_length("UO_TCU", params.UO_TCU)
         self.LO_TCL_constraint = self.problem.constrain_line_length("LO_TCL", params.LO_TCL)
         # problem.constrain_angle_between_lines("UO_TCU", "tire", problem["UO_TCU"].angle_to(problem["tire"]))
-        self.problem.constrain_line_length("TC_TCU", params.TC_TCU)
+        # self.problem.constrain_line_length("TC_TCU", params.TC_TCU)
         # self.problem.constrain_line_length("TC_TCL", params.TC_TCL)
-        self.tire_constraint = self.problem.constrain_line_length("tire", params.TIRE_D-params.TIRE_COMPRESSION)
+        self.tire_constraint = self.problem.constrain_line_length("tire", params.TC_TCL)
 
         self.problem.add_line("O_TCL", self.problem["O"], self.problem["TCL"])
         self.problem.constrain_angle_between_lines("O_TCL", "Ox", -0.0001)
@@ -78,9 +81,6 @@ class Suspension:
         self.constraints.append(self.LO_TCL_constraint)
         self.constraints.append(self.tire_constraint)
 
-        end = time.time()
-        print("Time to initialize suspension geometry: " + str(end-start))
-
     def solve_problem(self, roll_angle, bump):
         start = time.time()
         self.problem["U"].position(rotate_point_at_pivot((params.U[0] * self.mul, params.U[1]), CHASSIS_ROLL_POINT, roll_angle))
@@ -88,19 +88,20 @@ class Suspension:
         self.problem["O"].position( (0, bump) )
         self.problem["TC"].position( (TC[0] * self.mul, TC[1] + bump) )
         self.problem["TCL"].position( (TCL[0] * self.mul, TCL[1] + bump) )
-        self.problem["TCU"].position( (TCU[0] * self.mul, TCU[1] + bump) )
+        # self.problem["TCU"].position( (TCU[0] * self.mul, TCU[1] + bump) )
         # problem.solve("minimize")
-        # problem.solve("bh", niter=2)
+        # self.problem.solve("bh", niter=2)
         self.problem.solve(
             "minimize", 
             method='SLSQP', 
             options={
                 'ftol': 1e-10,
-                'maxiter': 20
+                'maxiter': 100
             }
         )
+        # self.problem.solve("ls", method="trf")
         end = time.time()
-        print("Time to solve: " + str(end-start))
+        # print("Time to solve: " + str(end-start))
         return self.problem
 
     def get_tire_to_ground_height(self):
@@ -139,6 +140,6 @@ class Suspension:
         print("UO_LO constraint error: " + str(self.UO_LO_constraint.error()))
         print("UO_TC constraint error: " + str(self.UO_TC_constraint.error()))
         print("LO_TC constraint error: " + str(self.LO_TC_constraint.error()))
-        print("UO_TCU constraint error: " + str(self.UO_TCU_constraint.error()))
+        # print("UO_TCU constraint error: " + str(self.UO_TCU_constraint.error()))
         print("LO_TCL constraint error: " + str(self.LO_TCL_constraint.error()))
         print("Tire constraint error: " + str(self.tire_constraint.error()))

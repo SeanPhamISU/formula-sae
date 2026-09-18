@@ -1,3 +1,7 @@
+'''
+ROLL ANGLE vs RIGHT CAMBER vs UCA INNER Y POSITIONS
+'''
+
 # INITIAL IMPORTS AND SUSPENSION CREATION
 from pygeosolve import Problem
 from params import *
@@ -14,7 +18,7 @@ right_suspension.solve_problem(0, 0)
 
 # DATA COLLECTION
 og_U = U
-u_y_offsets = np.linspace(-0.3, 0.3, 5)
+u_y_offsets = np.linspace(-0.3, 0.3, 10)
 u_x_offsets = np.linspace(-0.3, 0.3, 5)
 roll_angles = np.linspace(-1.5, 1.5, CHART_ITERATIONS)
 camber_results = []

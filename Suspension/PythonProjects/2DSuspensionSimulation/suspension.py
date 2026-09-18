@@ -91,17 +91,16 @@ class Suspension:
         self.problem["TCU"].position( (TCU[0] * self.mul, TCU[1] + bump) )
         # problem.solve("minimize")
         # problem.solve("bh", niter=2)
-        # self.problem.solve(
-        #     "minimize", 
-        #     method='SLSQP', 
-        #     options={
-        #         'ftol': 1e-10,
-        #         'maxiter': 20
-        #     }
-        # )
+        self.problem.solve(
+            "minimize", 
+            method='SLSQP', 
+            options={
+                'ftol': 1e-10,
+                'maxiter': 20
+            }
+        )
         end = time.time()
-        # print("Time to solve: " + str(end-start))
-        self.problem.solve("ls", ftol=1e-12)
+        print("Time to solve: " + str(end-start))
         return self.problem
 
     def get_tire_to_ground_height(self):

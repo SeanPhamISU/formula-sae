@@ -40,5 +40,5 @@ def update_l(new_L, left_suspension, right_suspension):
     global L, L_LO
     L = new_L
     L_LO = get_dist(L, LO)
-    left_suspension.up_arm_constraint.set_length(U_UO)
-    right_suspension.up_arm_constraint.set_length(U_UO)
+    left_suspension.low_arm_constraint.set_length(L_LO)
+    right_suspension.low_arm_constraint.set_length(L_LO)

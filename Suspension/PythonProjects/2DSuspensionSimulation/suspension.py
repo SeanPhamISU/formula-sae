@@ -105,19 +105,15 @@ class Suspension:
         return error
 
     def get_roll_center(self, other):
-        UUO = Line(Point(self.problem["U"].x, self.problem["U"].y), Point(self.problem["UO"].x, self.problem["UO"].y))
-        LLO = Line(Point(self.problem["L"].x, self.problem["L"].y), Point(self.problem["LO"].x, self.problem["LO"].y))
-        TCLP = Point(self.problem["TCL"].x, self.problem["TCL"].y)
+        start = time.time()
+        S1 = get_line_intersection((self.problem["U"].x, self.problem["U"].y), (self.problem["UO"].x, self.problem["UO"].y),
+                                    (self.problem["L"].x, self.problem["L"].y), (self.problem["LO"].x, self.problem["LO"].y))
+        S2 = get_line_intersection((other.problem["U"].x, other.problem["U"].y), (other.problem["UO"].x, other.problem["UO"].y),
+                                    (other.problem["L"].x, other.problem["L"].y), (other.problem["LO"].x, other.problem["LO"].y))
 
-        UUO2 = Line(Point(other.problem["U"].x, other.problem["U"].y), Point(other.problem["UO"].x, other.problem["UO"].y))
-        LLO2 = Line(Point(other.problem["L"].x, other.problem["L"].y), Point(other.problem["LO"].x, other.problem["LO"].y))
-        TCLP2 = Point(other.problem["TCL"].x, other.problem["TCL"].y)
-
-        S1 = intersection(UUO, LLO)[0]
-        S2 = intersection(UUO2, LLO2)[0]
-        S1TCL = Line(S1, TCLP)
-        S2TCL2 = Line(S2, TCLP2)
-        RC = intersection(S1TCL, S2TCL2)[0]
+        RC = get_line_intersection( S1, (self.problem["TCL"].x, self.problem["TCL"].y), S2, (other.problem["TCL"].x, other.problem["TCL"].y))
+        end = time.time()
+        # print( "Time to calculate roll center: " + str(end-start))
         return RC
 
     def debug_errors(self):
